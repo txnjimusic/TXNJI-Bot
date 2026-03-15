@@ -1,9 +1,28 @@
 require('dotenv').config();
 
-const { Client, GatewayIntentBits } = require('discord.js');
+const express = require("express");
+const app = express();
+
+const { Client, GatewayIntentBits } = require("discord.js");
 
 const welcome = require("./events/welcome");
 const goodbye = require("./events/goodbye");
+
+// --------------------------------
+// Webserver für Render (gegen Timeout)
+// --------------------------------
+
+app.get("/", (req, res) => {
+  res.send("TXNJI Bot läuft");
+});
+
+app.listen(3000, () => {
+  console.log("Webserver läuft auf Port 3000");
+});
+
+// --------------------------------
+// Discord Bot
+// --------------------------------
 
 const client = new Client({
  intents: [
@@ -12,36 +31,20 @@ const client = new Client({
  ]
 });
 
-client.once("ready", () => {
-  console.log(`Bot online als ${client.user.tag}`);
-
-  // -----------------------------
-  // TEST WELCOME UND GOODBYE
-  // -----------------------------
-
-  // Test-Mitglied erstellen
-  const testMember = {
-    user: {
-      username: "TestUser",
-      displayAvatarURL: () => "https://i.imgur.com/AfFp7pu.png" // Testavatar
-    },
-    guild: client.guilds.cache.first() // nimmt den ersten Server
-  };
-
-  // Test-Welcome senden
-  welcome(testMember);
-
-  // Test-Goodbye senden
-  goodbye(testMember);
+// Bot gestartet
+client.once("clientReady", () => {
+ console.log(`Bot online als ${client.user.tag}`);
 });
 
-// Echte Member-Events
+// Welcome Event
 client.on("guildMemberAdd", member => {
  welcome(member);
 });
 
+// Goodbye Event
 client.on("guildMemberRemove", member => {
  goodbye(member);
 });
 
+// Bot Login
 client.login(process.env.TOKEN);
