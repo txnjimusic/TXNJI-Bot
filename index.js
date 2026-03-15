@@ -5,9 +5,10 @@ const { Client, GatewayIntentBits } = require("discord.js");
 
 const welcome = require("./events/welcome");
 const goodbye = require("./events/goodbye");
+const youtubeNotifier = require("./features/youtubeNotifier");
 
 // ----------------------
-// Express Webserver
+// Webserver für Render
 // ----------------------
 
 const app = express();
@@ -16,8 +17,7 @@ app.get("/", (req, res) => {
   res.send("TXNJI Bot läuft");
 });
 
-// WICHTIG: Render benutzt process.env.PORT
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Webserver läuft auf Port ${PORT}`);
@@ -36,16 +36,20 @@ const client = new Client({
 
 client.once("clientReady", () => {
   console.log(`Bot online als ${client.user.tag}`);
+
+  // YouTube notifier starten
+  youtubeNotifier(client);
 });
 
-// Welcome
+// Welcome Event
 client.on("guildMemberAdd", member => {
   welcome(member);
 });
 
-// Goodbye
+// Goodbye Event
 client.on("guildMemberRemove", member => {
   goodbye(member);
 });
 
+// Bot Login
 client.login(process.env.TOKEN);
