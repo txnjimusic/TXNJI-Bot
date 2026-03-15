@@ -1,30 +1,31 @@
 require("dotenv").config();
 
 const express = require("express");
-const app = express();
-
 const { Client, GatewayIntentBits } = require("discord.js");
 
 const welcome = require("./events/welcome");
 const goodbye = require("./events/goodbye");
 
-// -----------------------------
-// Webserver (für Render notwendig)
-// -----------------------------
+// ----------------------
+// Express Webserver
+// ----------------------
+
+const app = express();
 
 app.get("/", (req, res) => {
   res.send("TXNJI Bot läuft");
 });
 
-const PORT = process.env.PORT || 3000;
+// WICHTIG: Render benutzt process.env.PORT
+const PORT = process.env.PORT;
 
-app.listen(PORT, "0.0.0.0", () => {
+app.listen(PORT, () => {
   console.log(`Webserver läuft auf Port ${PORT}`);
 });
 
-// -----------------------------
+// ----------------------
 // Discord Bot
-// -----------------------------
+// ----------------------
 
 const client = new Client({
   intents: [
@@ -37,15 +38,14 @@ client.once("clientReady", () => {
   console.log(`Bot online als ${client.user.tag}`);
 });
 
-// Welcome Nachricht
+// Welcome
 client.on("guildMemberAdd", member => {
   welcome(member);
 });
 
-// Goodbye Nachricht
+// Goodbye
 client.on("guildMemberRemove", member => {
   goodbye(member);
 });
 
-// Login
 client.login(process.env.TOKEN);
