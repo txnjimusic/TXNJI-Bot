@@ -1,4 +1,4 @@
-require('dotenv').config();
+require("dotenv").config();
 
 const express = require("express");
 const app = express();
@@ -8,9 +8,9 @@ const { Client, GatewayIntentBits } = require("discord.js");
 const welcome = require("./events/welcome");
 const goodbye = require("./events/goodbye");
 
-// --------------------------------
-// Webserver für Render (gegen Timeout)
-// --------------------------------
+// -----------------------------
+// Webserver (für Render notwendig)
+// -----------------------------
 
 app.get("/", (req, res) => {
   res.send("TXNJI Bot läuft");
@@ -18,34 +18,34 @@ app.get("/", (req, res) => {
 
 const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
- console.log(`Webserver läuft auf Port ${PORT}`);
+app.listen(PORT, "0.0.0.0", () => {
+  console.log(`Webserver läuft auf Port ${PORT}`);
 });
-// --------------------------------
+
+// -----------------------------
 // Discord Bot
-// --------------------------------
+// -----------------------------
 
 const client = new Client({
- intents: [
-  GatewayIntentBits.Guilds,
-  GatewayIntentBits.GuildMembers
- ]
+  intents: [
+    GatewayIntentBits.Guilds,
+    GatewayIntentBits.GuildMembers
+  ]
 });
 
-// Bot gestartet
 client.once("clientReady", () => {
- console.log(`Bot online als ${client.user.tag}`);
+  console.log(`Bot online als ${client.user.tag}`);
 });
 
-// Welcome Event
+// Welcome Nachricht
 client.on("guildMemberAdd", member => {
- welcome(member);
+  welcome(member);
 });
 
-// Goodbye Event
+// Goodbye Nachricht
 client.on("guildMemberRemove", member => {
- goodbye(member);
+  goodbye(member);
 });
 
-// Bot Login
+// Login
 client.login(process.env.TOKEN);
