@@ -3,7 +3,7 @@ const Parser = require("rss-parser");
 
 const parser = new Parser();
 
-// 👉 UCCE-onWdjkkQqjxr8eF0wzg
+// ✅ HIER DEINE CHANNEL ID ALS STRING!
 const CHANNEL_ID = "UCCE-onWdjkkQqjxr8eF0wzg";
 
 module.exports = [
@@ -29,13 +29,13 @@ module.exports = [
 `🌐 **TXNJI Socials**
 
 ▶ YouTube
-https://www.youtube.com/channel/${UCCE-onWdjkkQqjxr8eF0wzg}
+https://www.youtube.com/channel/${CHANNEL_ID}
 
 🎵 TikTok
 https://tiktok.com/@x_txnji
 
 📸 Instagram
-https://instagram.com/txnji_music
+https://instagram.com/txnji_music`
   );
 
  }
@@ -53,7 +53,7 @@ https://instagram.com/txnji_music
   try {
 
    const feed = await parser.parseURL(
-    `https://www.youtube.com/feeds/videos.xml?channel_id=${UCCE-onWdjkkQqjxr8eF0wzg}`
+    `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
    );
 
    const video = feed.items[0];
