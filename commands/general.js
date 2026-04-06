@@ -1,4 +1,10 @@
 const { SlashCommandBuilder } = require("discord.js");
+const Parser = require("rss-parser");
+
+const parser = new Parser();
+
+// 👉 UCCE-onWdjkkQqjxr8eF0wzg
+const CHANNEL_ID = "UCCE-onWdjkkQqjxr8eF0wzg";
 
 module.exports = [
 
@@ -8,7 +14,7 @@ module.exports = [
   .setDescription("Test if the bot is working"),
 
  async execute(interaction){
-  await interaction.reply("TXNJI Bot is active🔥");
+  await interaction.reply("🏓 Pong! Bot is working.");
  }
 },
 
@@ -22,17 +28,14 @@ module.exports = [
   await interaction.reply(
 `🌐 **TXNJI Socials**
 
-🎵 Spotify
-https://open.spotify.com/artist/0jnIN9JZhwTN59Rnj1MyNS?si=hMlsGGj9Ski2TjxLuVEnew
-
 ▶ YouTube
-https://youtube.com/@txnji
+https://www.youtube.com/channel/${UCCE-onWdjkkQqjxr8eF0wzg}
 
 🎵 TikTok
-https://www.tiktok.com/@x_txnji
+https://tiktok.com/@x_txnji
 
 📸 Instagram
-https://www.instagram.com/txnji_music/`
+https://instagram.com/txnji_music
   );
 
  }
@@ -41,15 +44,34 @@ https://www.instagram.com/txnji_music/`
 {
  data: new SlashCommandBuilder()
   .setName("latestvideo")
-  .setDescription("Shows the latest YouTube video"),
+  .setDescription("Shows the latest YouTube upload"),
 
  async execute(interaction){
 
-  await interaction.reply(
-`🎬 **Latest TXNJI Video**
+  await interaction.reply("⏳ Loading latest video...");
 
-https://youtube.com/@txnji`
-  );
+  try {
+
+   const feed = await parser.parseURL(
+    `https://www.youtube.com/feeds/videos.xml?channel_id=${UCCE-onWdjkkQqjxr8eF0wzg}`
+   );
+
+   const video = feed.items[0];
+
+   await interaction.editReply(
+`🎬 **Latest TXNJI Upload**
+
+**${video.title}**
+${video.link}`
+   );
+
+  } catch (err) {
+
+   console.error(err);
+
+   await interaction.editReply("❌ Could not fetch latest video.");
+
+  }
 
  }
 
