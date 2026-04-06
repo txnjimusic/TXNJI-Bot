@@ -3,8 +3,11 @@ const Parser = require("rss-parser");
 
 const parser = new Parser();
 
-// ✅ HIER DEINE CHANNEL ID ALS STRING!
+// ✅ DEINE CHANNEL ID (die du gefunden hast)
 const CHANNEL_ID = "UCCE-onWdjkkQqjxr8eF0wzg";
+
+// ✅ Dein echter Kanal-Link (fix)
+const CHANNEL_LINK = "https://www.youtube.com/@x_txnji";
 
 module.exports = [
 
@@ -29,7 +32,7 @@ module.exports = [
 `🌐 **TXNJI Socials**
 
 ▶ YouTube
-https://www.youtube.com/channel/${CHANNEL_ID}
+${CHANNEL_LINK}
 
 🎵 TikTok
 https://tiktok.com/@x_txnji
@@ -56,7 +59,14 @@ https://instagram.com/txnji_music`
     `https://www.youtube.com/feeds/videos.xml?channel_id=${CHANNEL_ID}`
    );
 
-   const video = feed.items[0];
+   // 🔥 Nur echte Videos / Shorts filtern
+   const video = feed.items.find(item =>
+     item.link.includes("watch?v=") || item.link.includes("shorts")
+   );
+
+   if (!video) {
+    return interaction.editReply("❌ No videos found on this channel yet.");
+   }
 
    await interaction.editReply(
 `🎬 **Latest TXNJI Upload**
